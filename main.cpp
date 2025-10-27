@@ -1,6 +1,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <algorithm>
 
 #include "library.h"
 #include "filemanager.h"
@@ -32,6 +33,8 @@ void displayMenu() {
     cout << "11. Statistiques de la Bibliothèque\n";
     cout << "12. Sauvegarder les Données\n";
     cout << "13. Créer une Sauvegarde\n";
+    cout << "14. Afficher les livres triés par titre\n";
+    cout << "15. Afficher les livres triés par auteur\n";   
     cout << "0.  Quitter\n";
     cout << "======================================================\n";
     cout << "Entrez votre choix : ";
@@ -84,18 +87,29 @@ int main() {
                 break;
             }
             
-            case 2: { // Remove Book
-                string isbn = getInput("Entrez l'ISBN du livre à supprimer : ");
-                
-                if (library.removeBook(isbn)) {
-                    cout << "Livre supprimé avec succès !\n";
-                } else {
-                    cout << "Livre non trouvé.\n";
-                }
+            case 2: { // Remove Book avec confirmation 
+            string isbn = getInput("Entrez l'ISBN du livre à supprimer : ");
+
+            
+            cout << "Voulez-vous vraiment supprimer ce livre ? (o/N) : ";
+            string reponse;
+            getline(cin, reponse);
+
+            if (reponse != "o" && reponse != "O" && reponse != "y" && reponse != "Y") {
+                cout << "Suppression annulée.\n";
                 pauseForInput();
                 break;
             }
-            
+
+            if (library.removeBook(isbn)) {
+                cout << "Livre supprimé avec succès !\n";
+            } else {
+                cout << "Livre non trouvé.\n";
+            }
+            pauseForInput();
+            break;
+        }
+                    
             case 3: { // Search by Title
                 string title = getInput("Entrez le titre à rechercher : ");
                 auto results = library.searchBooksByTitle(title);
@@ -212,6 +226,48 @@ int main() {
                 pauseForInput();
                 break;
             }
+            case 14: { // Tri  titre
+               
+                auto allBooks = library.getAllBooks(); 
+                
+                std::sort(allBooks.begin(), allBooks.end(),[](Book* a, Book* b) {
+                            return a->getTitle() < b->getTitle();
+                        });
+
+                if (allBooks.empty()) {
+                    std::cout << "Aucun livre à afficher.\n";
+                } else {
+                    std::cout << "\n---- LIVRES TRIES PAR TITRE ----\n";
+                    for (int  i = 0; i < allBooks.size(); ++i) {
+                        std::cout << "\nLivre " << (i + 1) << " :\n";
+                        std::cout << allBooks[i]->toString() << "\n";
+                        std::cout << "---------------------------\n";
+                    }
+                }
+                pauseForInput();
+                break;
+            }
+
+            case 15: { // Tri auteur
+                auto allBooks = library.getAllBooks();  
+                std::sort(allBooks.begin(), allBooks.end(),[](Book* a, Book* b) {
+                            return a->getAuthor() < b->getAuthor();
+                        });
+
+                if (allBooks.empty()) {
+                    std::cout << "Aucun livre à afficher.\n";
+                } else {
+                    std::cout << "\n---- LIVRES TRIES PAR AUTEUR ----\n";
+                    for (int  i = 0; i < allBooks.size(); ++i) {
+                        std::cout << "\nLivre " << (i + 1) << " :\n";
+                        std::cout << allBooks[i]->toString() << "\n";
+                        std::cout << "---------------------------\n";
+                    }
+                }
+                pauseForInput();
+                break;
+            }
+
             
             case 0: // Exit
                 cout << "Sauvegarde des données avant la fermeture...\n";
