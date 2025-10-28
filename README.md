@@ -25,3 +25,4 @@ Réponse : Dans mon code, j’ai créé une fonction pour Sauvegarder et lire le
 Question 2 : Options de développement possible
 
 Reponse : Une bonne solution serait d’utiliser une base de données MySQL pour enregistrer les livres, auteurs et utilisateurs. Cela rendrait les recherches plus rapides et cela éviterait d’utiliser des fichiers texte. On pourrait aussi créer une interface web avec Node.js Express pour gérer les livres à partir d’un site web. C++ serait encore présent mais il faudrait des requêtes SQL pour accéder a la base de données. Cela rendrait le système plus simple et capable de gérer un très grand nombres de livres.
+Edwin Duvernaud
